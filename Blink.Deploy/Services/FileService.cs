@@ -138,7 +138,13 @@ namespace Blink.Deploy.Services
             var fileName = Path.GetFileName(relativePath);
             return patterns.Any(pattern =>
             {
-                var matcher = new Microsoft.Extensions.FileSystemGlobbing.Matcher();
+                // Check if pattern matches a directory prefix
+                if (relativePath.StartsWith(pattern.TrimEnd('\\', '/'),
+                    StringComparison.OrdinalIgnoreCase))
+                    return true;
+
+                // Check file name glob pattern
+                var matcher = new Matcher();
                 matcher.AddInclude(pattern);
                 return matcher.Match(fileName).HasMatches;
             });
