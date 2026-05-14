@@ -16,6 +16,7 @@
 - 🔒 Preserves production config files (`appsettings.*.json`, `web.config`)
 - 🖥 Supports both **IIS App Pools** and **Windows Services**
 - 📋 Audit log of every operation
+- 📋 Deployment status timestamps.
 - 🚀 Single self-contained `blink.exe` — no .NET runtime required on server
 
 ---
@@ -96,7 +97,8 @@ blink rollback myapp
 | `blink prepare [app]`  | `p`   | Backup current, copy new files to `-next` folder     |
 | `blink swap [app]`     | `s`   | Stop service, swap `-next` to current, start service |
 | `blink rollback [app]` | `r`   | Swap `-prev` back to current                         |
-| `blink status [app]`   |       | Show folder and service status                       |
+| `blink status [app]`   | `st`  | Show folder and service status                       |
+| `blink clean [app]`    | `c`   | Removes the prev folder for app                      |
 
 > All commands prompt for app selection if `[app]` is omitted.
 
