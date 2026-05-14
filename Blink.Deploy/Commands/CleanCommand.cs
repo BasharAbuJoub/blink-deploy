@@ -5,19 +5,15 @@ using System.ComponentModel;
 
 namespace Blink.Deploy.Commands
 {
-    public class SwapCommand : Command<SwapCommand.Settings>
+    public class CleanCommand : Command<CleanCommand.Settings>
     {
         private readonly ConfigService _configService;
-        private readonly FileService _fileService;
-        private readonly ServiceManager _serviceManager;
-        private readonly StateService _stateService;
+        private readonly LogService _logService;
 
-        public SwapCommand()
+        public CleanCommand()
         {
             _configService = new ConfigService();
-            _fileService = new FileService(new LogService());
-            _serviceManager = new ServiceManager();
-            _stateService = new StateService();
+            _logService = new LogService();
         }
 
         public class Settings : CommandSettings
@@ -41,11 +37,21 @@ namespace Blink.Deploy.Commands
             }
 
             var app = _configService.GetApp(appName);
+            var prevPath = app.Path + "-prev";
 
-            _serviceManager.Stop(app);
-            _fileService.Swap(app);
-            _serviceManager.Start(app);
-            _stateService.SetLastSwap(app.Name);
+            if (!Directory.Exists(prevPath))
+            {
+                AnsiConsole.MarkupLine("[yellow]No prev folder found, nothing to clean.[/]");
+                return 0;
+            }
+
+            var confirm = AnsiConsole.Confirm($"Delete [yellow]{prevPath}[/]?", false);
+            if (!confirm) return 0;
+
+            _logService.Info("clean", app.Name, $"Deleting prev: {prevPath}");
+            Directory.Delete(prevPath, recursive: true);
+            _logService.Info("clean", app.Name, "Clean complete.");
+            AnsiConsole.MarkupLine("[green]Prev folder deleted.[/]");
 
             return 0;
         }

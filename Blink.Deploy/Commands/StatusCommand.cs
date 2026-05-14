@@ -9,10 +9,12 @@ namespace Blink.Deploy.Commands
     public class StatusCommand : Command<StatusCommand.Settings>
     {
         private readonly ConfigService _configService;
+        private readonly StateService _stateService;
 
         public StatusCommand()
         {
             _configService = new ConfigService();
+            _stateService = new StateService();
         }
 
         public class Settings : CommandSettings
@@ -62,6 +64,12 @@ namespace Blink.Deploy.Commands
                 table.AddRow("Service Name", $"[yellow]{app.ServiceName}[/]");
                 table.AddRow("Service Status", GetServiceStatus(app));
             }
+
+            var appState = _stateService.GetState(app.Name);
+
+            table.AddRow("Last Prepare", appState?.LastPrepare ?? "[grey]Never[/]");
+            table.AddRow("Last Swap", appState?.LastSwap ?? "[grey]Never[/]");
+            table.AddRow("Last Rollback", appState?.LastRollback ?? "[grey]Never[/]");
 
             AnsiConsole.Write(table);
 

@@ -10,12 +10,14 @@ namespace Blink.Deploy.Commands
         private readonly ConfigService _configService;
         private readonly FileService _fileService;
         private readonly ServiceManager _serviceManager;
+        private readonly StateService _stateService;
 
         public RollbackCommand()
         {
             _configService = new ConfigService();
             _fileService = new FileService(new LogService());
             _serviceManager = new ServiceManager();
+            _stateService = new StateService();
         }
 
         public class Settings : CommandSettings
@@ -45,6 +47,7 @@ namespace Blink.Deploy.Commands
             _fileService.Rollback(app);
             _serviceManager.Start(app);
             AnsiConsole.MarkupLine("[green]Rollback complete.[/]");
+            _stateService.SetLastRollback(app.Name);
 
             return 0;
         }

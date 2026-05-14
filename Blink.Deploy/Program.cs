@@ -21,7 +21,12 @@ app.Configure(config =>
         .WithAlias("r")
         .WithDescription("Rolls back to the previous version.");
 
+    config.AddCommand<CleanCommand>("clean")
+        .WithAlias("c")
+        .WithDescription("Removes the prev folder after a successful deployment.");
+
     config.AddCommand<StatusCommand>("status")
+        .WithAlias("st")
         .WithDescription("Shows the current status of an app.");
 
     config.AddCommand<InstallCommand>("install")

@@ -10,12 +10,14 @@ namespace Blink.Deploy.Commands
         private readonly ConfigService _configService;
         private readonly FileService _fileService;
         private readonly LogService _logService;
+        private readonly StateService _stateService;
 
         public PrepareCommand()
         {
             _configService = new ConfigService();
             _logService = new LogService();
             _fileService = new FileService(_logService);
+            _stateService = new StateService();
         }
 
         public class Settings : CommandSettings
@@ -63,7 +65,7 @@ namespace Blink.Deploy.Commands
             _logService.Info("prepare", app.Name, "Started");
             _fileService.Backup(app);
             _fileService.Prepare(app, absoluteSource);
-
+            _stateService.SetLastPrepare(app.Name);
             return 0;
         }
     }
