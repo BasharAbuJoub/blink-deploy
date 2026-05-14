@@ -23,7 +23,7 @@
 
 ## 📦 Installation
 
-1. Download `blink.exe` from [Releases](https://github.com/BasharAbuJaab/blink-deploy/releases)
+1. Download `blink.exe` from [Releases](https://github.com/BasharAbuJoub/blink-deploy/releases)
 2. Place it in a folder on your server (e.g. `C:\tools\blink\`)
 3. Run as Administrator:
 
