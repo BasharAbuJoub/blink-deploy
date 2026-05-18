@@ -24,11 +24,11 @@ namespace Blink.Deploy.Services
                 throw new DirectoryNotFoundException($"App path not found: {app.Path}");
 
             _logService.Info("prepare", app.Name, $"Copying current to next: {nextPath}");
-            AnsiConsole.MarkupLine("[blue]Copying current to next...[/]");
+            AnsiConsole.MarkupLine("[cyan]Copying current to next...[/]");
             CopyDirectory(app.Path, nextPath, overwrite: true);
 
             _logService.Info("prepare", app.Name, $"Copying source files from: {sourcePath}");
-            AnsiConsole.MarkupLine("[blue]Copying new files to next...[/]");
+            AnsiConsole.MarkupLine("[cyan]Copying new files to next...[/]");
             CopyDirectory(sourcePath, nextPath, overwrite: true, preserve: app.PreserveFiles);
 
             _logService.Info("prepare", app.Name, "Prepare complete.");
@@ -49,16 +49,16 @@ namespace Blink.Deploy.Services
             if (Directory.Exists(prevPath))
             {
                 _logService.Info("swap", app.Name, $"Deleting old prev: {prevPath}");
-                AnsiConsole.MarkupLine("[blue]Deleting old prev...[/]");
+                AnsiConsole.MarkupLine("[cyan]Deleting old prev...[/]");
                 Directory.Delete(prevPath, recursive: true);
             }
 
             _logService.Info("swap", app.Name, $"Renaming current to prev: {prevPath}");
-            AnsiConsole.MarkupLine("[blue]Renaming current to prev...[/]");
+            AnsiConsole.MarkupLine("[cyan]Renaming current to prev...[/]");
             Directory.Move(app.Path, prevPath);
 
             _logService.Info("swap", app.Name, $"Renaming next to current: {app.Path}");
-            AnsiConsole.MarkupLine("[blue]Renaming next to current...[/]");
+            AnsiConsole.MarkupLine("[cyan]Renaming next to current...[/]");
             Directory.Move(nextPath, app.Path);
 
             _logService.Info("swap", app.Name, "Swap complete.");
@@ -76,16 +76,16 @@ namespace Blink.Deploy.Services
             if (Directory.Exists(nextPath))
             {
                 _logService.Info("rollback", app.Name, $"Deleting next: {nextPath}");
-                AnsiConsole.MarkupLine("[blue]Deleting next...[/]");
+                AnsiConsole.MarkupLine("[cyan]Deleting next...[/]");
                 Directory.Delete(nextPath, recursive: true);
             }
 
             _logService.Info("rollback", app.Name, $"Renaming current to next: {nextPath}");
-            AnsiConsole.MarkupLine("[blue]Renaming current to next...[/]");
+            AnsiConsole.MarkupLine("[cyan]Renaming current to next...[/]");
             Directory.Move(app.Path, nextPath);
 
             _logService.Info("rollback", app.Name, $"Renaming prev to current: {app.Path}");
-            AnsiConsole.MarkupLine("[blue]Renaming prev to current...[/]");
+            AnsiConsole.MarkupLine("[cyan]Renaming prev to current...[/]");
             Directory.Move(prevPath, app.Path);
 
             _logService.Info("rollback", app.Name, "Rollback complete.");
@@ -107,7 +107,7 @@ namespace Blink.Deploy.Services
             var backupPath = Path.Combine(backupRoot, $"{app.Name}_{timestamp}.zip");
 
             _logService.Info("backup", app.Name, $"Taking backup to {backupPath}");
-            AnsiConsole.MarkupLine("[blue]Taking backup...[/]");
+            AnsiConsole.MarkupLine("[cyan]Taking backup...[/]");
             System.IO.Compression.ZipFile.CreateFromDirectory(app.Path, backupPath);
             _logService.Info("backup", app.Name, "Backup complete.");
             AnsiConsole.MarkupLine($"[green]Backup saved to: {backupPath}[/]");

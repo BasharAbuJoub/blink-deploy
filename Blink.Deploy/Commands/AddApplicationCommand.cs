@@ -28,7 +28,7 @@ namespace Blink.Deploy.Commands
                 config = new BlinkConfig();
             }
 
-            AnsiConsole.Write(new Rule("[blue]New App[/]"));
+            AnsiConsole.Write(new Rule("[cyan]New App[/]"));
 
             var app = new AppConfig
             {
