@@ -21,6 +21,10 @@ app.Configure(config =>
         .WithAlias("r")
         .WithDescription("Rolls back to the previous version.");
 
+    config.AddCommand<RestartCommand>("restart")
+        .WithAlias("rs")
+        .WithDescription("Restarts the configured service for an app.");
+
     config.AddCommand<CleanCommand>("clean")
         .WithAlias("c")
         .WithDescription("Removes the prev folder after a successful deployment.");

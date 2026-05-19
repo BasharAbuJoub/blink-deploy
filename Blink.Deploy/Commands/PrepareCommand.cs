@@ -52,7 +52,7 @@ namespace Blink.Deploy.Commands
 
             var app = _configService.GetApp(appName);
             var absoluteSource = Path.GetFullPath(source);
-            AnsiConsole.Write(new Rule("[blue]Confirm Prepare[/]"));
+            AnsiConsole.Write(new Rule("[cyan]Confirm Prepare[/]"));
             AnsiConsole.MarkupLine($"  App     : [green]{app.Name}[/]");
             AnsiConsole.MarkupLine($"  Source  : [yellow]{absoluteSource}[/]");
             AnsiConsole.MarkupLine($"  Target  : [yellow]{app.Path}[/]");

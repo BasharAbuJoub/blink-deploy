@@ -22,11 +22,21 @@ namespace Blink.Deploy.Commands
             [CommandArgument(0, "[app]")]
             [Description("The app name defined in blink.config.json")]
             public string AppName { get; set; } = string.Empty;
+
+            [CommandOption("-a|--all")]
+            [Description("Show status for all configured apps")]
+            public bool All { get; set; }
         }
 
         protected override int Execute(CommandContext context, Settings settings, CancellationToken cancellationToken)
         {
             var config = _configService.Load();
+
+            if (settings.All)
+            {
+                WriteAllAppsStatus(config.Apps);
+                return 0;
+            }
 
             var appName = settings.AppName;
             if (string.IsNullOrWhiteSpace(appName))
@@ -38,14 +48,18 @@ namespace Blink.Deploy.Commands
             }
 
             var app = _configService.GetApp(appName);
+            WriteSingleAppStatus(app);
 
+            return 0;
+        }
+
+        private void WriteSingleAppStatus(AppConfig app)
+        {
+            var appState = _stateService.GetState(app.Name);
             var nextPath = app.Path + "-next";
             var prevPath = app.Path + "-prev";
-            var backupPath = Path.Combine(Path.GetDirectoryName(app.Path)!, "Backup");
 
-            var backupCount = Directory.Exists(backupPath)
-                ? Directory.GetFiles(backupPath, $"{app.Name}_*.zip").Length
-                : 0;
+            var backupCount = GetBackupCount(app);
 
             var table = new Table()
                 .Border(TableBorder.Rounded)
@@ -56,7 +70,7 @@ namespace Blink.Deploy.Commands
             table.AddRow("Current", Exists(app.Path));
             table.AddRow("Next", Exists(nextPath));
             table.AddRow("Prev", Exists(prevPath));
-            table.AddRow("Backups", $"[blue]{backupCount}[/]");
+            table.AddRow("Backups", $"[cyan]{backupCount}[/]");
 
             if (!string.IsNullOrWhiteSpace(app.ServiceType))
             {
@@ -65,19 +79,55 @@ namespace Blink.Deploy.Commands
                 table.AddRow("Service Status", GetServiceStatus(app));
             }
 
-            var appState = _stateService.GetState(app.Name);
-
             table.AddRow("Last Prepare", appState?.LastPrepare ?? "[grey]Never[/]");
             table.AddRow("Last Swap", appState?.LastSwap ?? "[grey]Never[/]");
             table.AddRow("Last Rollback", appState?.LastRollback ?? "[grey]Never[/]");
 
             AnsiConsole.Write(table);
+        }
 
-            return 0;
+        private void WriteAllAppsStatus(IEnumerable<AppConfig> apps)
+        {
+            var table = new Table()
+                .Border(TableBorder.Rounded)
+                .AddColumn("App")
+                .AddColumn("Service Type")
+                .AddColumn("Service Name")
+                .AddColumn("Service Status")
+                .AddColumn("Last Prepare")
+                .AddColumn("Last Swap")
+                .AddColumn("Last Rollback")
+                .AddColumn("Backups");
+
+            foreach (var app in apps)
+            {
+                var appState = _stateService.GetState(app.Name);
+
+                table.AddRow(
+                    $"[green]{app.Name}[/]",
+                    $"[yellow]{app.ServiceType ?? "None"}[/]",
+                    $"[yellow]{app.ServiceName ?? "None"}[/]",
+                    string.IsNullOrWhiteSpace(app.ServiceType) ? "[grey]N/A[/]" : GetServiceStatus(app),
+                    appState?.LastPrepare ?? "[grey]Never[/]",
+                    appState?.LastSwap ?? "[grey]Never[/]",
+                    appState?.LastRollback ?? "[grey]Never[/]",
+                    $"[cyan]{GetBackupCount(app)}[/]");
+            }
+
+            AnsiConsole.Write(table);
         }
 
         private string Exists(string path) =>
-            Directory.Exists(path) ? "[green]✅ Exists[/]" : "[red]❌ Not found[/]";
+            Directory.Exists(path) ? "[green]Exists[/]" : "[red]Not found[/]";
+
+        private int GetBackupCount(AppConfig app)
+        {
+            var backupPath = Path.Combine(Path.GetDirectoryName(app.Path)!, "Backup");
+
+            return Directory.Exists(backupPath)
+                ? Directory.GetFiles(backupPath, $"{app.Name}_*.zip").Length
+                : 0;
+        }
 
         private string GetServiceStatus(AppConfig app)
         {

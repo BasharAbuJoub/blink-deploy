@@ -6,6 +6,20 @@ namespace Blink.Deploy.Services;
 
 public class ServiceManager
 {
+    public void Restart(AppConfig app)
+    {
+        if (string.IsNullOrWhiteSpace(app.ServiceType))
+        {
+            AnsiConsole.MarkupLine("[yellow]No service configured, skipping restart.[/]");
+            return;
+        }
+
+        AnsiConsole.MarkupLine("[cyan]Restarting service...[/]");
+        Stop(app);
+        Start(app);
+        AnsiConsole.MarkupLine("[green]Service restarted.[/]");
+    }
+
     public void Stop(AppConfig app)
     {
         if (string.IsNullOrWhiteSpace(app.ServiceType))
@@ -14,7 +28,7 @@ public class ServiceManager
             return;
         }
 
-        AnsiConsole.MarkupLine("[blue]Stopping service...[/]");
+        AnsiConsole.MarkupLine("[cyan]Stopping service...[/]");
 
         if (app.ServiceType.Equals("IIS", StringComparison.OrdinalIgnoreCase))
             StopIIS(app.ServiceName);
@@ -32,7 +46,7 @@ public class ServiceManager
             return;
         }
 
-        AnsiConsole.MarkupLine("[blue]Starting service...[/]");
+        AnsiConsole.MarkupLine("[cyan]Starting service...[/]");
 
         if (app.ServiceType.Equals("IIS", StringComparison.OrdinalIgnoreCase))
             StartIIS(app.ServiceName);
