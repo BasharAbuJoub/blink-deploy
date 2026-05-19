@@ -32,7 +32,7 @@ namespace Blink.Deploy.Services
             CopyDirectory(sourcePath, nextPath, overwrite: true, preserve: app.PreserveFiles);
 
             _logService.Info("prepare", app.Name, "Prepare complete.");
-            AnsiConsole.MarkupLine("[green]Prepare complete.[/]");
+            AnsiConsole.MarkupLine("[green1]Prepare complete.[/]");
         }
 
         public void Swap(AppConfig app)
@@ -62,7 +62,7 @@ namespace Blink.Deploy.Services
             Directory.Move(nextPath, app.Path);
 
             _logService.Info("swap", app.Name, "Swap complete.");
-            AnsiConsole.MarkupLine("[green]Swap complete.[/]");
+            AnsiConsole.MarkupLine("[green1]Swap complete.[/]");
         }
 
         public void Rollback(AppConfig app)
@@ -89,7 +89,7 @@ namespace Blink.Deploy.Services
             Directory.Move(prevPath, app.Path);
 
             _logService.Info("rollback", app.Name, "Rollback complete.");
-            AnsiConsole.MarkupLine("[green]Rollback complete.[/]");
+            AnsiConsole.MarkupLine("[green1]Rollback complete.[/]");
         }
 
         public void Backup(AppConfig app)
@@ -110,7 +110,7 @@ namespace Blink.Deploy.Services
             AnsiConsole.MarkupLine("[cyan]Taking backup...[/]");
             System.IO.Compression.ZipFile.CreateFromDirectory(app.Path, backupPath);
             _logService.Info("backup", app.Name, "Backup complete.");
-            AnsiConsole.MarkupLine($"[green]Backup saved to: {backupPath}[/]");
+            AnsiConsole.MarkupLine($"[green1]Backup saved to: {backupPath}[/]");
         }
 
         private void CopyDirectory(string source, string dest, bool overwrite, List<string>? preserve = null)

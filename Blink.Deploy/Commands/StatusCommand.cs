@@ -66,7 +66,7 @@ namespace Blink.Deploy.Commands
                 .AddColumn("Property")
                 .AddColumn("Value");
 
-            table.AddRow("App", $"[green]{app.Name}[/]");
+            table.AddRow("App", $"[green1]{app.Name}[/]");
             table.AddRow("Current", Exists(app.Path));
             table.AddRow("Next", Exists(nextPath));
             table.AddRow("Prev", Exists(prevPath));
@@ -91,12 +91,12 @@ namespace Blink.Deploy.Commands
             var table = new Table()
                 .Border(TableBorder.Rounded)
                 .AddColumn("App")
-                .AddColumn("Service Type")
-                .AddColumn("Service Name")
                 .AddColumn("Service Status")
                 .AddColumn("Last Prepare")
                 .AddColumn("Last Swap")
                 .AddColumn("Last Rollback")
+                .AddColumn("Service Type")
+                .AddColumn("Service Name")
                 .AddColumn("Backups");
 
             foreach (var app in apps)
@@ -104,13 +104,13 @@ namespace Blink.Deploy.Commands
                 var appState = _stateService.GetState(app.Name);
 
                 table.AddRow(
-                    $"[green]{app.Name}[/]",
-                    $"[yellow]{app.ServiceType ?? "None"}[/]",
-                    $"[yellow]{app.ServiceName ?? "None"}[/]",
+                    $"[green1]{app.Name}[/]",
                     string.IsNullOrWhiteSpace(app.ServiceType) ? "[grey]N/A[/]" : GetServiceStatus(app),
                     appState?.LastPrepare ?? "[grey]Never[/]",
                     appState?.LastSwap ?? "[grey]Never[/]",
                     appState?.LastRollback ?? "[grey]Never[/]",
+                    $"[yellow]{app.ServiceType ?? "None"}[/]",
+                    $"[yellow]{app.ServiceName ?? "None"}[/]",
                     $"[cyan]{GetBackupCount(app)}[/]");
             }
 
@@ -118,7 +118,7 @@ namespace Blink.Deploy.Commands
         }
 
         private string Exists(string path) =>
-            Directory.Exists(path) ? "[green]Exists[/]" : "[red]Not found[/]";
+            Directory.Exists(path) ? "[green1]Exists[/]" : "[red]Not found[/]";
 
         private int GetBackupCount(AppConfig app)
         {
@@ -145,14 +145,14 @@ namespace Blink.Deploy.Commands
                     var output = process?.StandardOutput.ReadToEnd() ?? string.Empty;
                     process?.WaitForExit();
                     return output.Contains("Started")
-                        ? "[green]Running[/]"
+                        ? "[green1]Running[/]"
                         : "[red]Stopped[/]";
                 }
                 else
                 {
                     using var service = new System.ServiceProcess.ServiceController(app.ServiceName!);
                     return service.Status == System.ServiceProcess.ServiceControllerStatus.Running
-                        ? "[green]Running[/]"
+                        ? "[green1]Running[/]"
                         : "[red]Stopped[/]";
                 }
             }

@@ -24,7 +24,7 @@ namespace Blink.Deploy.Commands
                     currentPath + ";" + exeDir,
                     EnvironmentVariableTarget.Machine);
 
-                AnsiConsole.MarkupLine("[green]blink added to system PATH.[/]");
+                AnsiConsole.MarkupLine("[green1]blink added to system PATH.[/]");
                 AnsiConsole.MarkupLine("[yellow]Restart your terminal for changes to take effect.[/]");
             }
             catch (UnauthorizedAccessException)

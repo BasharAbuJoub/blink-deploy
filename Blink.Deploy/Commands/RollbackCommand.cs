@@ -46,7 +46,7 @@ namespace Blink.Deploy.Commands
             _serviceManager.Stop(app);
             _fileService.Rollback(app);
             _serviceManager.Start(app);
-            AnsiConsole.MarkupLine("[green]Rollback complete.[/]");
+            AnsiConsole.MarkupLine("[green1]Rollback complete.[/]");
             _stateService.SetLastRollback(app.Name);
 
             return 0;

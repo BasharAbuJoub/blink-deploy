@@ -17,7 +17,7 @@ public class ServiceManager
         AnsiConsole.MarkupLine("[cyan]Restarting service...[/]");
         Stop(app);
         Start(app);
-        AnsiConsole.MarkupLine("[green]Service restarted.[/]");
+        AnsiConsole.MarkupLine("[green1]Service restarted.[/]");
     }
 
     public void Stop(AppConfig app)
@@ -35,7 +35,7 @@ public class ServiceManager
         else
             StopWindowsService(app.ServiceName);
 
-        AnsiConsole.MarkupLine("[green]Service stopped.[/]");
+        AnsiConsole.MarkupLine("[green1]Service stopped.[/]");
     }
 
     public void Start(AppConfig app)
@@ -53,7 +53,7 @@ public class ServiceManager
         else
             StartWindowsService(app.ServiceName);
 
-        AnsiConsole.MarkupLine("[green]Service started.[/]");
+        AnsiConsole.MarkupLine("[green1]Service started.[/]");
     }
 
     private void StopIIS(string appPoolName)

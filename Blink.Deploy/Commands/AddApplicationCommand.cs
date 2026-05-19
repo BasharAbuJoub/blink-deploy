@@ -77,7 +77,7 @@ namespace Blink.Deploy.Commands
             });
 
             File.WriteAllText(configPath, json);
-            AnsiConsole.MarkupLine($"[green]App '{app.Name}' saved to blink.config.json.[/]");
+            AnsiConsole.MarkupLine($"[green1]App '{app.Name}' saved to blink.config.json.[/]");
 
             return 0;
         }

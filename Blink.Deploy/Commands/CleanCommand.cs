@@ -51,7 +51,7 @@ namespace Blink.Deploy.Commands
             _logService.Info("clean", app.Name, $"Deleting prev: {prevPath}");
             Directory.Delete(prevPath, recursive: true);
             _logService.Info("clean", app.Name, "Clean complete.");
-            AnsiConsole.MarkupLine("[green]Prev folder deleted.[/]");
+            AnsiConsole.MarkupLine("[green1]Prev folder deleted.[/]");
 
             return 0;
         }
